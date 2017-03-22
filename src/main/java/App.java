@@ -15,5 +15,22 @@ public class App {
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/job", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("template", "templates/job-post-form.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
+    post("/jobs", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      String description = request.queryParams("description");
+      String title = request.queryParams("title");
+      String email = request.queryParams("email");
+      Job newJob = new Job(title, description, email);
+      model.put("newJob", newJob);
+      model.put("template", "templates/success.vtl");
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
+
   }
 }
