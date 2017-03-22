@@ -12,6 +12,7 @@ public class App {
     get("/", (request, response) -> {
       Map<String, Object> model = new HashMap<String, Object>();
       model.put("template", "templates/index.vtl");
+
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -27,10 +28,18 @@ public class App {
       String title = request.queryParams("title");
       String email = request.queryParams("email");
       Job newJob = new Job(title, description, email);
-      model.put("newJob", newJob);
+      request.session().attribute("newJob", newJob);
+      model.put("newJob", request.session().attribute("newJob"));
       model.put("template", "templates/success.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+    get("/jobs", (request, response) -> {
+      Map<String, Object> model = new HashMap<String, Object>();
+      model.put("newJob", request.session().attribute("newJob"));
+      model.put("template", "templates/available-jobs.vtl");
+
+      return new ModelAndView(model, layout);
+    }, new VelocityTemplateEngine());
   }
 }
